@@ -71,6 +71,44 @@ var story_templates := [
 	}
 ]
 
+var sprint_templates := [
+	{
+		"id": "start",
+		"title_key": "sprint_template.start.title",
+		"subtitle_key": "sprint_template.start.subtitle",
+		"suggested_name_key": "sprint_template.start.suggested_name",
+		"duration_days": 2
+	},
+	{
+		"id": "rising",
+		"title_key": "sprint_template.rising.title",
+		"subtitle_key": "sprint_template.rising.subtitle",
+		"suggested_name_key": "sprint_template.rising.suggested_name",
+		"duration_days": 2
+	},
+	{
+		"id": "day_zero",
+		"title_key": "sprint_template.day_zero.title",
+		"subtitle_key": "sprint_template.day_zero.subtitle",
+		"suggested_name_key": "sprint_template.day_zero.suggested_name",
+		"duration_days": 2
+	},
+	{
+		"id": "rhythm",
+		"title_key": "sprint_template.rhythm.title",
+		"subtitle_key": "sprint_template.rhythm.subtitle",
+		"suggested_name_key": "sprint_template.rhythm.suggested_name",
+		"duration_days": 3
+	},
+	{
+		"id": "focus",
+		"title_key": "sprint_template.focus.title",
+		"subtitle_key": "sprint_template.focus.subtitle",
+		"suggested_name_key": "sprint_template.focus.suggested_name",
+		"duration_days": 3
+	}
+]
+
 @onready var content_box: VBoxContainer = $ScreenContainer/ContentBox
 
 @onready var home_screen: VBoxContainer = $ScreenContainer/ContentBox/HomeScreen
@@ -90,17 +128,19 @@ var story_templates := [
 
 @onready var template_screen: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen
 @onready var template_title_label: Label = $ScreenContainer/ContentBox/TemplateScreen/TemplateTitleLabel
-@onready var template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen/TemplateButtonsContainer
+@onready var template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen/TemplateScrollContainer/TemplateButtonsContainer
 @onready var cancel_template_button: Button = $ScreenContainer/ContentBox/TemplateScreen/CancelTemplateButton
 
 @onready var dashboard_screen: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen
 @onready var story_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryTitleLabel
 @onready var story_description_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryDescriptionLabel
 @onready var current_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsTitleLabel
-@onready var current_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList
-@onready var no_paths_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList/NoPathsLabel
+@onready var current_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer
+@onready var current_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList
+@onready var no_paths_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList/NoPathsLabel
 @onready var suggested_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsTitleLabel
-@onready var suggested_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsList
+@onready var suggested_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer
+@onready var suggested_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer/SuggestedPathsList
 @onready var sprints_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SprintsTitleLabel
 @onready var sprints_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SprintsList
 @onready var add_sprint_hint_label: Label = $ScreenContainer/ContentBox/DashboardScreen/AddSprintHintLabel
@@ -115,16 +155,21 @@ var story_templates := [
 @onready var path_form_message_label: Label = $ScreenContainer/ContentBox/AddPathScreen/PathFormMessageLabel
 @onready var create_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CreatePathButton
 @onready var suggested_path_form_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/SuggestedPathFormTitleLabel
-@onready var path_form_suggested_list: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedList
+@onready var path_form_suggested_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer
+@onready var path_form_suggested_list: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer/PathFormSuggestedList
 @onready var cancel_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CancelPathButton
 
 @onready var add_sprint_screen: VBoxContainer = $ScreenContainer/ContentBox/AddSprintScreen
 @onready var add_sprint_title_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/AddSprintTitleLabel
+@onready var create_custom_sprint_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/CreateCustomSprintLabel
 @onready var sprint_title_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintTitleInput
 @onready var sprint_start_date_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintStartDateInput
 @onready var sprint_end_date_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintEndDateInput
 @onready var sprint_form_message_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/SprintFormMessageLabel
 @onready var create_sprint_button: Button = $ScreenContainer/ContentBox/AddSprintScreen/CreateSprintButton
+@onready var start_from_sprint_template_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/StartFromSprintTemplateLabel
+@onready var sprint_templates_title_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/SprintTemplatesTitleLabel
+@onready var sprint_template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/AddSprintScreen/SprintTemplateScrollContainer/SprintTemplateButtonsContainer
 @onready var cancel_sprint_button: Button = $ScreenContainer/ContentBox/AddSprintScreen/CancelSprintButton
 
 @onready var settings_screen: VBoxContainer = $ScreenContainer/ContentBox/SettingsScreen
@@ -184,6 +229,8 @@ func clear_dynamic_children(container: Container) -> void:
 func make_list_label(label_text: String) -> Label:
 	var label := Label.new()
 	label.text = label_text
+	label.custom_minimum_size = Vector2(320, 0)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.set_meta("dynamic_item", true)
@@ -193,7 +240,8 @@ func make_list_label(label_text: String) -> Label:
 func make_list_button(button_text: String, pressed_action: Callable) -> Button:
 	var button := Button.new()
 	button.text = button_text
-	button.custom_minimum_size = Vector2(340, 44)
+	button.custom_minimum_size = Vector2(340, 52)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.set_meta("dynamic_item", true)
 	button.pressed.connect(pressed_action)
@@ -233,10 +281,13 @@ func update_language_text() -> void:
 	cancel_path_button.text = tr_text("common.cancel")
 
 	add_sprint_title_label.text = tr_text("dashboard.add_sprint")
+	create_custom_sprint_label.text = tr_text("sprint.create_custom")
 	sprint_title_input.placeholder_text = tr_text("sprint.title_placeholder")
 	sprint_start_date_input.placeholder_text = tr_text("sprint.start_date_placeholder")
 	sprint_end_date_input.placeholder_text = tr_text("sprint.end_date_placeholder")
 	create_sprint_button.text = tr_text("sprint.create")
+	start_from_sprint_template_label.text = tr_text("sprint.start_from_template")
+	sprint_templates_title_label.text = tr_text("sprint.templates")
 	cancel_sprint_button.text = tr_text("common.cancel")
 
 	settings_title_label.text = tr_text("settings.title")
@@ -382,7 +433,7 @@ func update_suggested_paths_list() -> void:
 			)
 
 	suggested_paths_title_label.visible = has_available_suggestions
-	suggested_paths_list.visible = has_available_suggestions
+	suggested_paths_scroll_container.visible = has_available_suggestions
 
 
 func update_sprints_list() -> void:
@@ -415,7 +466,7 @@ func update_path_form_suggestions() -> void:
 			)
 
 	suggested_path_form_title_label.visible = has_available_suggestions
-	path_form_suggested_list.visible = has_available_suggestions
+	path_form_suggested_scroll_container.visible = has_available_suggestions
 
 
 func create_custom_path() -> void:
@@ -472,9 +523,10 @@ func show_add_sprint_form() -> void:
 		return
 
 	sprint_title_input.text = ""
-	sprint_start_date_input.text = ""
-	sprint_end_date_input.text = ""
+	sprint_start_date_input.text = get_date_text(0)
+	sprint_end_date_input.text = get_date_text(1)
 	sprint_form_message_label.text = ""
+	update_sprint_template_buttons()
 	show_screen(add_sprint_screen)
 
 
@@ -492,6 +544,56 @@ func create_sprint() -> void:
 	show_story_dashboard()
 
 
+func update_sprint_template_buttons() -> void:
+	clear_dynamic_children(sprint_template_buttons_container)
+
+	for sprint_template in sprint_templates:
+		var duration_text := tr_text("sprint.duration_format") % [
+			localized_number(sprint_template["duration_days"]),
+			tr_text("sprint.days")
+		]
+		var button_text := "%s\n%s\n%s: %s\n%s: %s" % [
+			tr_text(sprint_template["title_key"]),
+			tr_text(sprint_template["subtitle_key"]),
+			tr_text("sprint.duration"),
+			duration_text,
+			tr_text("sprint.suggested_name"),
+			tr_text(sprint_template["suggested_name_key"])
+		]
+		sprint_template_buttons_container.add_child(
+			make_list_button(button_text, create_sprint_from_template.bind(sprint_template))
+		)
+
+
+func create_sprint_from_template(sprint_template: Dictionary) -> void:
+	active_story["sprints"].append({
+		"title": tr_text(sprint_template["suggested_name_key"]),
+		"start_date": get_date_text(0),
+		"end_date": get_date_text(int(sprint_template["duration_days"]) - 1),
+		"template_id": sprint_template["id"]
+	})
+	show_story_dashboard()
+
+
+func get_date_text(days_from_today: int) -> String:
+	var seconds_per_day := 86400
+	var unix_time := Time.get_unix_time_from_system() + (days_from_today * seconds_per_day)
+	var date := Time.get_datetime_dict_from_unix_time(unix_time)
+	return "%04d-%02d-%02d" % [date["year"], date["month"], date["day"]]
+
+
+func localized_number(value: int) -> String:
+	var number_text := str(value)
+	if localization.get_language() != Localization.PERSIAN:
+		return number_text
+
+	var persian_digits := ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"]
+	var result := ""
+	for digit in number_text:
+		result += persian_digits[int(digit)]
+	return result
+
+
 func show_settings() -> void:
 	show_screen(settings_screen)
 
@@ -507,6 +609,8 @@ func change_language(index: int) -> void:
 		show_template_selection()
 	elif add_path_screen.visible:
 		update_path_form_suggestions()
+	elif add_sprint_screen.visible:
+		update_sprint_template_buttons()
 
 	apply_language_direction()
 

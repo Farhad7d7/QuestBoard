@@ -106,8 +106,14 @@ theme_override_font_sizes/font_size = 28
 text = "Choose a Story Template"
 horizontal_alignment = 1
 
-[node name="TemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen"]
+[node name="TemplateScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/TemplateScreen"]
+custom_minimum_size = Vector2(420, 220)
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="TemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="CancelTemplateButton" type="Button" parent="ScreenContainer/ContentBox/TemplateScreen"]
@@ -138,11 +144,17 @@ theme_override_font_sizes/font_size = 20
 text = "Current paths"
 horizontal_alignment = 1
 
-[node name="CurrentPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+[node name="CurrentPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="CurrentPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="NoPathsLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList"]
+[node name="NoPathsLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList"]
 layout_mode = 2
 text = "No paths yet. Add your first path to shape this story."
 horizontal_alignment = 1
@@ -154,8 +166,14 @@ theme_override_font_sizes/font_size = 20
 text = "Suggested paths"
 horizontal_alignment = 1
 
-[node name="SuggestedPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+[node name="SuggestedPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="SuggestedPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="SprintsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
@@ -226,8 +244,14 @@ theme_override_font_sizes/font_size = 18
 text = "Add from suggested paths"
 horizontal_alignment = 1
 
-[node name="PathFormSuggestedList" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen"]
+[node name="PathFormSuggestedScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/AddPathScreen"]
+custom_minimum_size = Vector2(420, 130)
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="PathFormSuggestedList" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="CancelPathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen"]
@@ -245,6 +269,12 @@ alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Add Sprint"
+horizontal_alignment = 1
+
+[node name="CreateCustomSprintLabel" type="Label" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Create Custom Sprint"
 horizontal_alignment = 1
 
 [node name="SprintTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddSprintScreen"]
@@ -271,6 +301,28 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Create Sprint"
+
+[node name="StartFromSprintTemplateLabel" type="Label" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Start From Sprint Template"
+horizontal_alignment = 1
+
+[node name="SprintTemplatesTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Sprint Templates"
+horizontal_alignment = 1
+
+[node name="SprintTemplateScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(420, 190)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="SprintTemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddSprintScreen/SprintTemplateScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="CancelSprintButton" type="Button" parent="ScreenContainer/ContentBox/AddSprintScreen"]
 custom_minimum_size = Vector2(340, 44)
