@@ -20,7 +20,285 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ContentBox" type="VBoxContainer" parent="ScreenContainer"]
-custom_minimum_size = Vector2(420, 0)
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
+
+[node name="HomeScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="ScreenContainer/ContentBox/HomeScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "QuestBoard"
+horizontal_alignment = 1
+
+[node name="EmptyStateLabel" type="Label" parent="ScreenContainer/ContentBox/HomeScreen"]
+layout_mode = 2
+text = "No story yet. Create your first story to begin your journey."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CreateCustomStoryButton" type="Button" parent="ScreenContainer/ContentBox/HomeScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Create Custom Story"
+
+[node name="StartFromTemplateButton" type="Button" parent="ScreenContainer/ContentBox/HomeScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Start From Template"
+
+[node name="SettingsButton" type="Button" parent="ScreenContainer/ContentBox/HomeScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Settings"
+
+[node name="CustomStoryScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="FormTitleLabel" type="Label" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Create Custom Story"
+horizontal_alignment = 1
+
+[node name="StoryTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Story title"
+
+[node name="StoryDescriptionInput" type="TextEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+custom_minimum_size = Vector2(360, 110)
+layout_mode = 2
+placeholder_text = "Story description"
+
+[node name="FormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CreateStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Create"
+
+[node name="CancelCustomStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="TemplateScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="TemplateTitleLabel" type="Label" parent="ScreenContainer/ContentBox/TemplateScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Choose a Story Template"
+horizontal_alignment = 1
+
+[node name="TemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CancelTemplateButton" type="Button" parent="ScreenContainer/ContentBox/TemplateScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="DashboardScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="StoryTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StoryDescriptionLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CurrentPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Current paths"
+horizontal_alignment = 1
+
+[node name="CurrentPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NoPathsLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList"]
+layout_mode = 2
+text = "No paths yet. Add your first path to shape this story."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SuggestedPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Suggested paths"
+horizontal_alignment = 1
+
+[node name="SuggestedPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SprintsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Sprints"
+horizontal_alignment = 1
+
+[node name="SprintsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AddSprintHintLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AddPathButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Add Path"
+
+[node name="AddSprintButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Add Sprint"
+
+[node name="BackToHomeButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Back to Home"
+
+[node name="AddPathScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="AddPathTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Add Path"
+horizontal_alignment = 1
+
+[node name="PathNameInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Path name"
+
+[node name="PathIconInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Icon text, optional"
+
+[node name="PathFormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CreatePathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Create Path"
+
+[node name="SuggestedPathFormTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Add from suggested paths"
+horizontal_alignment = 1
+
+[node name="PathFormSuggestedList" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CancelPathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="AddSprintScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="AddSprintTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Add Sprint"
+horizontal_alignment = 1
+
+[node name="SprintTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Sprint title"
+
+[node name="SprintStartDateInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Start date"
+
+[node name="SprintEndDateInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "End date"
+
+[node name="SprintFormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CreateSprintButton" type="Button" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Create Sprint"
+
+[node name="CancelSprintButton" type="Button" parent="ScreenContainer/ContentBox/AddSprintScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="SettingsScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SettingsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/SettingsScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="LanguageLabel" type="Label" parent="ScreenContainer/ContentBox/SettingsScreen"]
+layout_mode = 2
+text = "App language"
+horizontal_alignment = 1
+
+[node name="LanguageSelector" type="OptionButton" parent="ScreenContainer/ContentBox/SettingsScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+
+[node name="BackFromSettingsButton" type="Button" parent="ScreenContainer/ContentBox/SettingsScreen"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Back to Home"

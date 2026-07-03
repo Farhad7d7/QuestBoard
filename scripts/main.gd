@@ -71,70 +71,202 @@ var story_templates := [
 	}
 ]
 
-@onready var screen_container: CenterContainer = $ScreenContainer
 @onready var content_box: VBoxContainer = $ScreenContainer/ContentBox
+
+@onready var home_screen: VBoxContainer = $ScreenContainer/ContentBox/HomeScreen
+@onready var title_label: Label = $ScreenContainer/ContentBox/HomeScreen/TitleLabel
+@onready var empty_state_label: Label = $ScreenContainer/ContentBox/HomeScreen/EmptyStateLabel
+@onready var create_custom_story_button: Button = $ScreenContainer/ContentBox/HomeScreen/CreateCustomStoryButton
+@onready var start_from_template_button: Button = $ScreenContainer/ContentBox/HomeScreen/StartFromTemplateButton
+@onready var settings_button: Button = $ScreenContainer/ContentBox/HomeScreen/SettingsButton
+
+@onready var custom_story_screen: VBoxContainer = $ScreenContainer/ContentBox/CustomStoryScreen
+@onready var form_title_label: Label = $ScreenContainer/ContentBox/CustomStoryScreen/FormTitleLabel
+@onready var story_title_input: LineEdit = $ScreenContainer/ContentBox/CustomStoryScreen/StoryTitleInput
+@onready var story_description_input: TextEdit = $ScreenContainer/ContentBox/CustomStoryScreen/StoryDescriptionInput
+@onready var form_message_label: Label = $ScreenContainer/ContentBox/CustomStoryScreen/FormMessageLabel
+@onready var create_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CreateStoryButton
+@onready var cancel_custom_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CancelCustomStoryButton
+
+@onready var template_screen: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen
+@onready var template_title_label: Label = $ScreenContainer/ContentBox/TemplateScreen/TemplateTitleLabel
+@onready var template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen/TemplateButtonsContainer
+@onready var cancel_template_button: Button = $ScreenContainer/ContentBox/TemplateScreen/CancelTemplateButton
+
+@onready var dashboard_screen: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen
+@onready var story_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryTitleLabel
+@onready var story_description_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryDescriptionLabel
+@onready var current_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsTitleLabel
+@onready var current_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList
+@onready var no_paths_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsList/NoPathsLabel
+@onready var suggested_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsTitleLabel
+@onready var suggested_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsList
+@onready var sprints_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SprintsTitleLabel
+@onready var sprints_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SprintsList
+@onready var add_sprint_hint_label: Label = $ScreenContainer/ContentBox/DashboardScreen/AddSprintHintLabel
+@onready var add_path_button: Button = $ScreenContainer/ContentBox/DashboardScreen/AddPathButton
+@onready var add_sprint_button: Button = $ScreenContainer/ContentBox/DashboardScreen/AddSprintButton
+@onready var back_to_home_button: Button = $ScreenContainer/ContentBox/DashboardScreen/BackToHomeButton
+
+@onready var add_path_screen: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen
+@onready var add_path_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/AddPathTitleLabel
+@onready var path_name_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathNameInput
+@onready var path_icon_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathIconInput
+@onready var path_form_message_label: Label = $ScreenContainer/ContentBox/AddPathScreen/PathFormMessageLabel
+@onready var create_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CreatePathButton
+@onready var suggested_path_form_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/SuggestedPathFormTitleLabel
+@onready var path_form_suggested_list: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedList
+@onready var cancel_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CancelPathButton
+
+@onready var add_sprint_screen: VBoxContainer = $ScreenContainer/ContentBox/AddSprintScreen
+@onready var add_sprint_title_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/AddSprintTitleLabel
+@onready var sprint_title_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintTitleInput
+@onready var sprint_start_date_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintStartDateInput
+@onready var sprint_end_date_input: LineEdit = $ScreenContainer/ContentBox/AddSprintScreen/SprintEndDateInput
+@onready var sprint_form_message_label: Label = $ScreenContainer/ContentBox/AddSprintScreen/SprintFormMessageLabel
+@onready var create_sprint_button: Button = $ScreenContainer/ContentBox/AddSprintScreen/CreateSprintButton
+@onready var cancel_sprint_button: Button = $ScreenContainer/ContentBox/AddSprintScreen/CancelSprintButton
+
+@onready var settings_screen: VBoxContainer = $ScreenContainer/ContentBox/SettingsScreen
+@onready var settings_title_label: Label = $ScreenContainer/ContentBox/SettingsScreen/SettingsTitleLabel
+@onready var language_label: Label = $ScreenContainer/ContentBox/SettingsScreen/LanguageLabel
+@onready var language_selector: OptionButton = $ScreenContainer/ContentBox/SettingsScreen/LanguageSelector
+@onready var back_from_settings_button: Button = $ScreenContainer/ContentBox/SettingsScreen/BackFromSettingsButton
 
 
 func _ready() -> void:
+	connect_buttons()
+	update_language_text()
 	show_home()
+
+
+func connect_buttons() -> void:
+	create_custom_story_button.pressed.connect(show_custom_story_form)
+	start_from_template_button.pressed.connect(show_template_selection)
+	settings_button.pressed.connect(show_settings)
+	create_story_button.pressed.connect(create_custom_story)
+	cancel_custom_story_button.pressed.connect(show_home)
+	cancel_template_button.pressed.connect(show_home)
+	add_path_button.pressed.connect(show_add_path_form)
+	add_sprint_button.pressed.connect(show_add_sprint_form)
+	back_to_home_button.pressed.connect(show_empty_home_without_story)
+	create_path_button.pressed.connect(create_custom_path)
+	cancel_path_button.pressed.connect(show_story_dashboard)
+	create_sprint_button.pressed.connect(create_sprint)
+	cancel_sprint_button.pressed.connect(show_story_dashboard)
+	back_from_settings_button.pressed.connect(show_home)
+	language_selector.item_selected.connect(change_language)
 
 
 func tr_text(key: String) -> String:
 	return localization.text(key)
 
 
-func clear_screen() -> void:
-	for child in content_box.get_children():
-		child.queue_free()
+func show_screen(screen_to_show: Control) -> void:
+	for screen in content_box.get_children():
+		screen.visible = screen == screen_to_show
+	apply_language_direction()
 
 
 func apply_language_direction() -> void:
-	if localization.is_rtl():
-		content_box.layout_direction = Control.LAYOUT_DIRECTION_RTL
-	else:
-		content_box.layout_direction = Control.LAYOUT_DIRECTION_LTR
+	var direction := Control.LAYOUT_DIRECTION_RTL if localization.is_rtl() else Control.LAYOUT_DIRECTION_LTR
+	content_box.layout_direction = direction
+	for screen in content_box.get_children():
+		screen.layout_direction = direction
 
 
-func add_label(label_name: String, label_text: String, font_size: int = 18) -> Label:
+func clear_dynamic_children(container: Container) -> void:
+	for child in container.get_children():
+		if child.get_meta("dynamic_item", false):
+			child.queue_free()
+
+
+func make_list_label(label_text: String) -> Label:
 	var label := Label.new()
-	label.name = label_name
 	label.text = label_text
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", font_size)
-	content_box.add_child(label)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.set_meta("dynamic_item", true)
 	return label
 
 
-func add_button(button_name: String, button_text: String, pressed_action: Callable) -> Button:
+func make_list_button(button_text: String, pressed_action: Callable) -> Button:
 	var button := Button.new()
-	button.name = button_name
 	button.text = button_text
-	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.custom_minimum_size = Vector2(340, 44)
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.set_meta("dynamic_item", true)
 	button.pressed.connect(pressed_action)
-	content_box.add_child(button)
 	return button
+
+
+func update_language_text() -> void:
+	title_label.text = tr_text("app.title")
+	empty_state_label.text = tr_text("home.empty_message")
+	create_custom_story_button.text = tr_text("home.create_custom_story")
+	start_from_template_button.text = tr_text("home.start_from_template")
+	settings_button.text = tr_text("home.settings")
+
+	form_title_label.text = tr_text("home.create_custom_story")
+	story_title_input.placeholder_text = tr_text("story.title_placeholder")
+	story_description_input.placeholder_text = tr_text("story.description_placeholder")
+	create_story_button.text = tr_text("story.create")
+	cancel_custom_story_button.text = tr_text("common.cancel")
+
+	template_title_label.text = tr_text("template.choose")
+	cancel_template_button.text = tr_text("common.cancel")
+
+	current_paths_title_label.text = tr_text("dashboard.current_paths")
+	no_paths_label.text = tr_text("dashboard.no_paths")
+	suggested_paths_title_label.text = tr_text("dashboard.suggested_paths")
+	sprints_title_label.text = tr_text("dashboard.sprints")
+	add_sprint_hint_label.text = tr_text("dashboard.add_path_before_sprint")
+	add_path_button.text = tr_text("dashboard.add_path")
+	add_sprint_button.text = tr_text("dashboard.add_sprint")
+	back_to_home_button.text = tr_text("common.back_to_home")
+
+	add_path_title_label.text = tr_text("dashboard.add_path")
+	path_name_input.placeholder_text = tr_text("path.name_placeholder")
+	path_icon_input.placeholder_text = tr_text("path.icon_placeholder")
+	create_path_button.text = tr_text("path.create")
+	suggested_path_form_title_label.text = tr_text("path.add_from_suggestions")
+	cancel_path_button.text = tr_text("common.cancel")
+
+	add_sprint_title_label.text = tr_text("dashboard.add_sprint")
+	sprint_title_input.placeholder_text = tr_text("sprint.title_placeholder")
+	sprint_start_date_input.placeholder_text = tr_text("sprint.start_date_placeholder")
+	sprint_end_date_input.placeholder_text = tr_text("sprint.end_date_placeholder")
+	create_sprint_button.text = tr_text("sprint.create")
+	cancel_sprint_button.text = tr_text("common.cancel")
+
+	settings_title_label.text = tr_text("settings.title")
+	language_label.text = tr_text("settings.language")
+	back_from_settings_button.text = tr_text("common.back_to_home")
+	update_language_selector()
+
+
+func update_language_selector() -> void:
+	language_selector.clear()
+	language_selector.add_item(tr_text("settings.english"))
+	language_selector.add_item(tr_text("settings.persian"))
+	language_selector.selected = 1 if localization.get_language() == Localization.PERSIAN else 0
 
 
 func localized_story_title() -> String:
 	if active_story.has("title_key"):
 		return tr_text(active_story["title_key"])
-
 	return active_story.get("title", "")
 
 
 func localized_story_description() -> String:
 	if active_story.has("description_key"):
 		return tr_text(active_story["description_key"])
-
 	return active_story.get("description", "")
 
 
 func localized_path_name(path_data: Dictionary) -> String:
 	if path_data.has("name_key"):
 		return tr_text(path_data["name_key"])
-
 	return path_data.get("name", "")
 
 
@@ -143,7 +275,6 @@ func has_path_name(path_name: String) -> bool:
 	for path_data in active_story.get("paths", []):
 		if localized_path_name(path_data).strip_edges().to_lower() == clean_name:
 			return true
-
 	return false
 
 
@@ -151,8 +282,153 @@ func has_path_key(path_key: String) -> bool:
 	for path_data in active_story.get("paths", []):
 		if path_data.get("name_key", "") == path_key:
 			return true
-
 	return false
+
+
+func show_home() -> void:
+	update_language_text()
+	show_screen(home_screen)
+
+
+func show_custom_story_form() -> void:
+	story_title_input.text = ""
+	story_description_input.text = ""
+	form_message_label.text = ""
+	show_screen(custom_story_screen)
+
+
+func create_custom_story() -> void:
+	var title := story_title_input.text.strip_edges()
+	if title.is_empty():
+		form_message_label.text = tr_text("error.empty_story_title")
+		return
+
+	active_story = {
+		"title": title,
+		"description": story_description_input.text.strip_edges(),
+		"suggested_path_keys": [],
+		"paths": [],
+		"sprints": []
+	}
+	show_story_dashboard()
+
+
+func show_template_selection() -> void:
+	clear_dynamic_children(template_buttons_container)
+	for story_template in story_templates:
+		var button_text := "%s\n%s" % [
+			tr_text(story_template["title_key"]),
+			tr_text(story_template["description_key"])
+		]
+		template_buttons_container.add_child(
+			make_list_button(button_text, create_story_from_template.bind(story_template))
+		)
+	show_screen(template_screen)
+
+
+func create_story_from_template(template_data: Dictionary) -> void:
+	active_story = {
+		"template_id": template_data["id"],
+		"title_key": template_data["title_key"],
+		"description_key": template_data["description_key"],
+		"suggested_path_keys": template_data["suggested_path_keys"].duplicate(),
+		"paths": [],
+		"sprints": []
+	}
+	show_story_dashboard()
+
+
+func show_story_dashboard() -> void:
+	if active_story.is_empty():
+		show_home()
+		return
+
+	update_dashboard()
+	show_screen(dashboard_screen)
+
+
+func update_dashboard() -> void:
+	story_title_label.text = localized_story_title()
+	story_description_label.text = localized_story_description()
+	update_paths_list()
+	update_suggested_paths_list()
+	update_sprints_list()
+
+
+func update_paths_list() -> void:
+	clear_dynamic_children(current_paths_list)
+	no_paths_label.visible = active_story["paths"].is_empty()
+
+	for path_data in active_story["paths"]:
+		var icon_text := str(path_data.get("icon", ""))
+		var path_text := localized_path_name(path_data)
+		if not icon_text.is_empty():
+			path_text = "%s %s" % [icon_text, path_text]
+		current_paths_list.add_child(make_list_label("- %s" % path_text))
+
+	add_sprint_button.visible = not active_story["paths"].is_empty()
+	add_sprint_hint_label.visible = active_story["paths"].is_empty()
+
+
+func update_suggested_paths_list() -> void:
+	clear_dynamic_children(suggested_paths_list)
+	var has_available_suggestions := false
+
+	for path_key in active_story.get("suggested_path_keys", []):
+		if not has_path_key(path_key):
+			has_available_suggestions = true
+			suggested_paths_list.add_child(
+				make_list_button(tr_text(path_key), add_suggested_path_and_show_dashboard.bind(path_key))
+			)
+
+	suggested_paths_title_label.visible = has_available_suggestions
+	suggested_paths_list.visible = has_available_suggestions
+
+
+func update_sprints_list() -> void:
+	clear_dynamic_children(sprints_list)
+	var sprints: Array = active_story.get("sprints", [])
+	sprints_title_label.visible = not sprints.is_empty()
+	sprints_list.visible = not sprints.is_empty()
+
+	for sprint_data in sprints:
+		sprints_list.add_child(make_list_label("- %s" % sprint_data.get("title", "")))
+
+
+func show_add_path_form() -> void:
+	path_name_input.text = ""
+	path_icon_input.text = ""
+	path_form_message_label.text = ""
+	update_path_form_suggestions()
+	show_screen(add_path_screen)
+
+
+func update_path_form_suggestions() -> void:
+	clear_dynamic_children(path_form_suggested_list)
+	var has_available_suggestions := false
+
+	for path_key in active_story.get("suggested_path_keys", []):
+		if not has_path_key(path_key):
+			has_available_suggestions = true
+			path_form_suggested_list.add_child(
+				make_list_button(tr_text(path_key), add_suggested_path_from_form.bind(path_key))
+			)
+
+	suggested_path_form_title_label.visible = has_available_suggestions
+	path_form_suggested_list.visible = has_available_suggestions
+
+
+func create_custom_path() -> void:
+	var path_name := path_name_input.text.strip_edges()
+	if path_name.is_empty():
+		path_form_message_label.text = tr_text("error.empty_path_name")
+		return
+
+	if not add_custom_path(path_name, path_icon_input.text):
+		path_form_message_label.text = tr_text("error.duplicate_path")
+		return
+
+	show_story_dashboard()
 
 
 func add_custom_path(path_name: String, icon_text: String) -> bool:
@@ -183,206 +459,58 @@ func add_suggested_path_and_show_dashboard(path_key: String) -> void:
 	show_story_dashboard()
 
 
-func add_suggested_path_from_form(path_key: String, message_label: Label) -> void:
+func add_suggested_path_from_form(path_key: String) -> void:
 	if not add_suggested_path(path_key):
-		message_label.text = tr_text("error.duplicate_path")
+		path_form_message_label.text = tr_text("error.duplicate_path")
+		return
+	show_story_dashboard()
+
+
+func show_add_sprint_form() -> void:
+	if active_story.get("paths", []).is_empty():
+		add_sprint_hint_label.text = tr_text("dashboard.add_path_before_sprint")
 		return
 
+	sprint_title_input.text = ""
+	sprint_start_date_input.text = ""
+	sprint_end_date_input.text = ""
+	sprint_form_message_label.text = ""
+	show_screen(add_sprint_screen)
+
+
+func create_sprint() -> void:
+	var sprint_title := sprint_title_input.text.strip_edges()
+	if sprint_title.is_empty():
+		sprint_form_message_label.text = tr_text("error.empty_sprint_title")
+		return
+
+	active_story["sprints"].append({
+		"title": sprint_title,
+		"start_date": sprint_start_date_input.text.strip_edges(),
+		"end_date": sprint_end_date_input.text.strip_edges()
+	})
 	show_story_dashboard()
 
 
-func show_home() -> void:
-	clear_screen()
+func show_settings() -> void:
+	show_screen(settings_screen)
+
+
+func change_language(index: int) -> void:
+	var next_language := Localization.PERSIAN if index == 1 else Localization.ENGLISH
+	localization.set_language(next_language)
+	update_language_text()
+
+	if dashboard_screen.visible:
+		update_dashboard()
+	elif template_screen.visible:
+		show_template_selection()
+	elif add_path_screen.visible:
+		update_path_form_suggestions()
+
 	apply_language_direction()
-
-	add_label("TitleLabel", tr_text("app.title"), 32)
-
-	if active_story.is_empty():
-		add_label("EmptyStateLabel", tr_text("home.empty_message"), 16)
-		add_button("CreateCustomStoryButton", tr_text("home.create_custom_story"), show_custom_story_form)
-		add_button("StartFromTemplateButton", tr_text("home.start_from_template"), show_template_selection)
-		add_button("SettingsButton", tr_text("home.settings"), show_settings)
-	else:
-		show_story_dashboard()
-
-
-func show_custom_story_form() -> void:
-	clear_screen()
-	apply_language_direction()
-
-	add_label("FormTitleLabel", tr_text("home.create_custom_story"), 28)
-
-	var title_input := LineEdit.new()
-	title_input.name = "StoryTitleInput"
-	title_input.placeholder_text = tr_text("story.title_placeholder")
-	title_input.custom_minimum_size = Vector2(360, 44)
-	content_box.add_child(title_input)
-
-	var description_input := TextEdit.new()
-	description_input.name = "StoryDescriptionInput"
-	description_input.placeholder_text = tr_text("story.description_placeholder")
-	description_input.custom_minimum_size = Vector2(360, 110)
-	content_box.add_child(description_input)
-
-	var message_label := add_label("FormMessageLabel", "", 14)
-
-	add_button(
-		"CreateStoryButton",
-		tr_text("story.create"),
-		func() -> void:
-			var title := title_input.text.strip_edges()
-			if title.is_empty():
-				message_label.text = tr_text("error.empty_story_title")
-				return
-
-			active_story = {
-				"title": title,
-				"description": description_input.text.strip_edges(),
-				"suggested_path_keys": [],
-				"paths": []
-			}
-			show_story_dashboard()
-	)
-
-	add_button("CancelButton", tr_text("common.cancel"), show_home)
-
-
-func show_template_selection() -> void:
-	clear_screen()
-	apply_language_direction()
-
-	add_label("TemplateTitleLabel", tr_text("template.choose"), 28)
-
-	for story_template in story_templates:
-		var template_button_text := "%s\n%s" % [
-			tr_text(story_template["title_key"]),
-			tr_text(story_template["description_key"])
-		]
-		add_button(
-			"TemplateButton_%s" % story_template["id"],
-			template_button_text,
-			create_story_from_template.bind(story_template)
-		)
-
-	add_button("CancelButton", tr_text("common.cancel"), show_home)
-
-
-func create_story_from_template(template_data: Dictionary) -> void:
-	active_story = {
-		"template_id": template_data["id"],
-		"title_key": template_data["title_key"],
-		"description_key": template_data["description_key"],
-		"suggested_path_keys": template_data["suggested_path_keys"].duplicate(),
-		"paths": []
-	}
-	show_story_dashboard()
-
-
-func show_story_dashboard() -> void:
-	clear_screen()
-	apply_language_direction()
-
-	add_label("StoryTitleLabel", localized_story_title(), 30)
-	add_label("StoryDescriptionLabel", localized_story_description(), 16)
-	add_label("CurrentPathsTitleLabel", tr_text("dashboard.current_paths"), 20)
-
-	if active_story["paths"].is_empty():
-		add_label("NoPathsLabel", tr_text("dashboard.no_paths"), 15)
-	else:
-		for path_data in active_story["paths"]:
-			var icon_text := str(path_data.get("icon", ""))
-			var path_text := localized_path_name(path_data)
-			if not icon_text.is_empty():
-				path_text = "%s %s" % [icon_text, path_text]
-			add_label("PathLabel_%s" % path_text.replace(" ", "_"), "- %s" % path_text, 16)
-
-	if not active_story["suggested_path_keys"].is_empty():
-		add_label("SuggestedPathsTitleLabel", tr_text("dashboard.suggested_paths"), 20)
-		for path_key in active_story["suggested_path_keys"]:
-			if not has_path_key(path_key):
-				add_button(
-					"SuggestedPathButton_%s" % path_key.replace(".", "_"),
-					tr_text(path_key),
-					add_suggested_path_and_show_dashboard.bind(path_key)
-				)
-
-	add_button("AddPathButton", tr_text("dashboard.add_path"), show_add_path_form)
-	add_button("BackToHomeButton", tr_text("common.back_to_home"), show_empty_home_without_story)
-
-
-func show_add_path_form() -> void:
-	clear_screen()
-	apply_language_direction()
-
-	add_label("AddPathTitleLabel", tr_text("dashboard.add_path"), 28)
-
-	var path_name_input := LineEdit.new()
-	path_name_input.name = "PathNameInput"
-	path_name_input.placeholder_text = tr_text("path.name_placeholder")
-	path_name_input.custom_minimum_size = Vector2(360, 44)
-	content_box.add_child(path_name_input)
-
-	var path_icon_input := LineEdit.new()
-	path_icon_input.name = "PathIconInput"
-	path_icon_input.placeholder_text = tr_text("path.icon_placeholder")
-	path_icon_input.custom_minimum_size = Vector2(360, 44)
-	content_box.add_child(path_icon_input)
-
-	var message_label := add_label("PathFormMessageLabel", "", 14)
-
-	add_button(
-		"CreatePathButton",
-		tr_text("path.create"),
-		func() -> void:
-			var path_name := path_name_input.text.strip_edges()
-			if path_name.is_empty():
-				message_label.text = tr_text("error.empty_path_name")
-				return
-
-			if not add_custom_path(path_name, path_icon_input.text):
-				message_label.text = tr_text("error.duplicate_path")
-				return
-
-			show_story_dashboard()
-	)
-
-	if not active_story["suggested_path_keys"].is_empty():
-		add_label("SuggestedPathFormTitleLabel", tr_text("path.add_from_suggestions"), 18)
-		for path_key in active_story["suggested_path_keys"]:
-			if not has_path_key(path_key):
-				add_button(
-					"SuggestedPathFormButton_%s" % path_key.replace(".", "_"),
-					tr_text(path_key),
-					add_suggested_path_from_form.bind(path_key, message_label)
-				)
-
-	add_button("CancelButton", tr_text("common.cancel"), show_story_dashboard)
 
 
 func show_empty_home_without_story() -> void:
 	active_story = {}
 	show_home()
-
-
-func show_settings() -> void:
-	clear_screen()
-	apply_language_direction()
-
-	add_label("SettingsTitleLabel", tr_text("settings.title"), 28)
-	add_label("LanguageLabel", tr_text("settings.language"), 18)
-
-	var language_selector := OptionButton.new()
-	language_selector.name = "LanguageSelector"
-	language_selector.custom_minimum_size = Vector2(340, 44)
-	language_selector.add_item(tr_text("settings.english"))
-	language_selector.add_item(tr_text("settings.persian"))
-	language_selector.selected = 1 if localization.get_language() == Localization.PERSIAN else 0
-	language_selector.item_selected.connect(
-		func(index: int) -> void:
-			var next_language := Localization.PERSIAN if index == 1 else Localization.ENGLISH
-			localization.set_language(next_language)
-			show_settings()
-	)
-	content_box.add_child(language_selector)
-
-	add_button("BackToHomeButton", tr_text("common.back_to_home"), show_home)
