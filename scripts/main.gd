@@ -1,86 +1,75 @@
 extends Control
 
-const LANGUAGE_ENGLISH := "en"
-const LANGUAGE_PERSIAN := "fa"
+const Localization = preload("res://scripts/localization/localization.gd")
 
-var current_language := LANGUAGE_ENGLISH
+var localization := Localization.new()
 var active_story := {}
 
 var story_templates := [
 	{
 		"id": "starting_over",
-		"title": "Starting Over",
-		"description": "Rebuild your life step by step after a difficult change.",
-		"suggested_paths": ["Health & Fitness", "Learning", "Income", "Family", "Creation", "Rest"]
+		"title_key": "template.starting_over.title",
+		"description_key": "template.starting_over.description",
+		"suggested_path_keys": [
+			"path.health_fitness",
+			"path.learning",
+			"path.income",
+			"path.family",
+			"path.creation",
+			"path.rest"
+		]
 	},
 	{
-		"id": "first_product",
-		"title": "Build My First Product",
-		"description": "Turn an idea into a small usable product through focused sprints.",
-		"suggested_paths": ["Product", "Learning", "Marketing", "Income", "Health & Fitness", "Rest"]
+		"id": "build_my_first_product",
+		"title_key": "template.build_my_first_product.title",
+		"description_key": "template.build_my_first_product.description",
+		"suggested_path_keys": [
+			"path.product",
+			"path.learning",
+			"path.marketing",
+			"path.income",
+			"path.health_fitness",
+			"path.rest"
+		]
 	},
 	{
 		"id": "health_reset",
-		"title": "Health Reset",
-		"description": "Improve energy, fitness, sleep, and daily discipline.",
-		"suggested_paths": ["Health & Fitness", "Nutrition", "Sleep", "Mindset", "Rest"]
+		"title_key": "template.health_reset.title",
+		"description_key": "template.health_reset.description",
+		"suggested_path_keys": [
+			"path.health_fitness",
+			"path.nutrition",
+			"path.sleep",
+			"path.mindset",
+			"path.rest"
+		]
 	},
 	{
 		"id": "learning_sprint",
-		"title": "Learning Sprint",
-		"description": "Learn a new skill through daily practice and measurable progress.",
-		"suggested_paths": ["Study", "Practice", "Projects", "Review", "Rest"]
+		"title_key": "template.learning_sprint.title",
+		"description_key": "template.learning_sprint.description",
+		"suggested_path_keys": [
+			"path.study",
+			"path.practice",
+			"path.projects",
+			"path.review",
+			"path.rest"
+		]
 	},
 	{
 		"id": "career_comeback",
-		"title": "Career Comeback",
-		"description": "Improve your resume, apply for jobs, prepare for interviews, and rebuild professional momentum.",
-		"suggested_paths": ["Resume", "Applications", "Interview Practice", "Learning", "Income", "Health & Fitness"]
+		"title_key": "template.career_comeback.title",
+		"description_key": "template.career_comeback.description",
+		"suggested_path_keys": [
+			"path.resume",
+			"path.applications",
+			"path.interview_practice",
+			"path.learning",
+			"path.income",
+			"path.health_fitness"
+		]
 	}
 ]
-
-var text := {
-	LANGUAGE_ENGLISH: {
-		"app_title": "QuestBoard",
-		"empty_message": "No story yet. Create your first story to begin your journey.",
-		"create_custom_story": "Create Custom Story",
-		"start_from_template": "Start From Template",
-		"settings": "Settings",
-		"story_title": "Story title",
-		"story_description": "Story description",
-		"create": "Create",
-		"cancel": "Cancel",
-		"choose_template": "Choose a Story Template",
-		"suggested_paths": "Suggested paths",
-		"add_path": "Add Path",
-		"back_to_home": "Back to Home",
-		"language": "App language",
-		"english": "English",
-		"persian": "Persian",
-		"empty_title_error": "Please enter a story title.",
-		"path_placeholder": "Path creation will come later."
-	},
-	LANGUAGE_PERSIAN: {
-		"app_title": "کوئست‌بورد",
-		"empty_message": "هنوز داستانی وجود ندارد. اولین داستان خود را بسازید و مسیرتان را آغاز کنید.",
-		"create_custom_story": "ساخت داستان دلخواه",
-		"start_from_template": "شروع با قالب آماده",
-		"settings": "تنظیمات",
-		"story_title": "عنوان داستان",
-		"story_description": "توضیح داستان",
-		"create": "ساخت",
-		"cancel": "لغو",
-		"choose_template": "یک قالب داستان انتخاب کنید",
-		"suggested_paths": "مسیرهای پیشنهادی",
-		"add_path": "افزودن مسیر",
-		"back_to_home": "بازگشت به خانه",
-		"language": "زبان برنامه",
-		"english": "انگلیسی",
-		"persian": "فارسی",
-		"empty_title_error": "لطفا عنوان داستان را وارد کنید.",
-		"path_placeholder": "ساخت مسیر در مرحله بعد اضافه می‌شود."
-	}
-}
 
 @onready var screen_container: CenterContainer = $ScreenContainer
 @onready var content_box: VBoxContainer = $ScreenContainer/ContentBox
@@ -91,7 +80,7 @@ func _ready() -> void:
 
 
 func tr_text(key: String) -> String:
-	return text[current_language][key]
+	return localization.text(key)
 
 
 func clear_screen() -> void:
@@ -100,7 +89,7 @@ func clear_screen() -> void:
 
 
 func apply_language_direction() -> void:
-	if current_language == LANGUAGE_PERSIAN:
+	if localization.is_rtl():
 		content_box.layout_direction = Control.LAYOUT_DIRECTION_RTL
 	else:
 		content_box.layout_direction = Control.LAYOUT_DIRECTION_LTR
@@ -121,23 +110,98 @@ func add_button(button_name: String, button_text: String, pressed_action: Callab
 	var button := Button.new()
 	button.name = button_name
 	button.text = button_text
-	button.custom_minimum_size = Vector2(320, 44)
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.custom_minimum_size = Vector2(340, 44)
 	button.pressed.connect(pressed_action)
 	content_box.add_child(button)
 	return button
+
+
+func localized_story_title() -> String:
+	if active_story.has("title_key"):
+		return tr_text(active_story["title_key"])
+
+	return active_story.get("title", "")
+
+
+func localized_story_description() -> String:
+	if active_story.has("description_key"):
+		return tr_text(active_story["description_key"])
+
+	return active_story.get("description", "")
+
+
+func localized_path_name(path_data: Dictionary) -> String:
+	if path_data.has("name_key"):
+		return tr_text(path_data["name_key"])
+
+	return path_data.get("name", "")
+
+
+func has_path_name(path_name: String) -> bool:
+	var clean_name := path_name.strip_edges().to_lower()
+	for path_data in active_story.get("paths", []):
+		if localized_path_name(path_data).strip_edges().to_lower() == clean_name:
+			return true
+
+	return false
+
+
+func has_path_key(path_key: String) -> bool:
+	for path_data in active_story.get("paths", []):
+		if path_data.get("name_key", "") == path_key:
+			return true
+
+	return false
+
+
+func add_custom_path(path_name: String, icon_text: String) -> bool:
+	var clean_name := path_name.strip_edges()
+	if clean_name.is_empty() or has_path_name(clean_name):
+		return false
+
+	active_story["paths"].append({
+		"name": clean_name,
+		"icon": icon_text.strip_edges()
+	})
+	return true
+
+
+func add_suggested_path(path_key: String) -> bool:
+	if has_path_key(path_key) or has_path_name(tr_text(path_key)):
+		return false
+
+	active_story["paths"].append({
+		"name_key": path_key,
+		"icon": ""
+	})
+	return true
+
+
+func add_suggested_path_and_show_dashboard(path_key: String) -> void:
+	add_suggested_path(path_key)
+	show_story_dashboard()
+
+
+func add_suggested_path_from_form(path_key: String, message_label: Label) -> void:
+	if not add_suggested_path(path_key):
+		message_label.text = tr_text("error.duplicate_path")
+		return
+
+	show_story_dashboard()
 
 
 func show_home() -> void:
 	clear_screen()
 	apply_language_direction()
 
-	add_label("TitleLabel", tr_text("app_title"), 32)
+	add_label("TitleLabel", tr_text("app.title"), 32)
 
 	if active_story.is_empty():
-		add_label("EmptyStateLabel", tr_text("empty_message"), 16)
-		add_button("CreateCustomStoryButton", tr_text("create_custom_story"), show_custom_story_form)
-		add_button("StartFromTemplateButton", tr_text("start_from_template"), show_template_selection)
-		add_button("SettingsButton", tr_text("settings"), show_settings)
+		add_label("EmptyStateLabel", tr_text("home.empty_message"), 16)
+		add_button("CreateCustomStoryButton", tr_text("home.create_custom_story"), show_custom_story_form)
+		add_button("StartFromTemplateButton", tr_text("home.start_from_template"), show_template_selection)
+		add_button("SettingsButton", tr_text("home.settings"), show_settings)
 	else:
 		show_story_dashboard()
 
@@ -146,17 +210,17 @@ func show_custom_story_form() -> void:
 	clear_screen()
 	apply_language_direction()
 
-	add_label("FormTitleLabel", tr_text("create_custom_story"), 28)
+	add_label("FormTitleLabel", tr_text("home.create_custom_story"), 28)
 
 	var title_input := LineEdit.new()
 	title_input.name = "StoryTitleInput"
-	title_input.placeholder_text = tr_text("story_title")
+	title_input.placeholder_text = tr_text("story.title_placeholder")
 	title_input.custom_minimum_size = Vector2(360, 44)
 	content_box.add_child(title_input)
 
 	var description_input := TextEdit.new()
 	description_input.name = "StoryDescriptionInput"
-	description_input.placeholder_text = tr_text("story_description")
+	description_input.placeholder_text = tr_text("story.description_placeholder")
 	description_input.custom_minimum_size = Vector2(360, 110)
 	content_box.add_child(description_input)
 
@@ -164,46 +228,52 @@ func show_custom_story_form() -> void:
 
 	add_button(
 		"CreateStoryButton",
-		tr_text("create"),
+		tr_text("story.create"),
 		func() -> void:
 			var title := title_input.text.strip_edges()
 			if title.is_empty():
-				message_label.text = tr_text("empty_title_error")
+				message_label.text = tr_text("error.empty_story_title")
 				return
 
 			active_story = {
 				"title": title,
 				"description": description_input.text.strip_edges(),
-				"suggested_paths": []
+				"suggested_path_keys": [],
+				"paths": []
 			}
 			show_story_dashboard()
 	)
 
-	add_button("CancelButton", tr_text("cancel"), show_home)
+	add_button("CancelButton", tr_text("common.cancel"), show_home)
 
 
 func show_template_selection() -> void:
 	clear_screen()
 	apply_language_direction()
 
-	add_label("TemplateTitleLabel", tr_text("choose_template"), 28)
+	add_label("TemplateTitleLabel", tr_text("template.choose"), 28)
 
 	for story_template in story_templates:
-		var template_button_text := "%s\n%s" % [story_template["title"], story_template["description"]]
+		var template_button_text := "%s\n%s" % [
+			tr_text(story_template["title_key"]),
+			tr_text(story_template["description_key"])
+		]
 		add_button(
 			"TemplateButton_%s" % story_template["id"],
 			template_button_text,
 			create_story_from_template.bind(story_template)
 		)
 
-	add_button("CancelButton", tr_text("cancel"), show_home)
+	add_button("CancelButton", tr_text("common.cancel"), show_home)
 
 
 func create_story_from_template(template_data: Dictionary) -> void:
 	active_story = {
-		"title": template_data["title"],
-		"description": template_data["description"],
-		"suggested_paths": template_data["suggested_paths"].duplicate()
+		"template_id": template_data["id"],
+		"title_key": template_data["title_key"],
+		"description_key": template_data["description_key"],
+		"suggested_path_keys": template_data["suggested_path_keys"].duplicate(),
+		"paths": []
 	}
 	show_story_dashboard()
 
@@ -212,21 +282,81 @@ func show_story_dashboard() -> void:
 	clear_screen()
 	apply_language_direction()
 
-	add_label("StoryTitleLabel", active_story["title"], 30)
-	add_label("StoryDescriptionLabel", active_story["description"], 16)
-	add_label("SuggestedPathsTitleLabel", tr_text("suggested_paths"), 20)
+	add_label("StoryTitleLabel", localized_story_title(), 30)
+	add_label("StoryDescriptionLabel", localized_story_description(), 16)
+	add_label("CurrentPathsTitleLabel", tr_text("dashboard.current_paths"), 20)
 
-	for path_name in active_story["suggested_paths"]:
-		add_label("PathLabel_%s" % path_name.replace(" ", "_"), "- %s" % path_name, 16)
+	if active_story["paths"].is_empty():
+		add_label("NoPathsLabel", tr_text("dashboard.no_paths"), 15)
+	else:
+		for path_data in active_story["paths"]:
+			var icon_text := str(path_data.get("icon", ""))
+			var path_text := localized_path_name(path_data)
+			if not icon_text.is_empty():
+				path_text = "%s %s" % [icon_text, path_text]
+			add_label("PathLabel_%s" % path_text.replace(" ", "_"), "- %s" % path_text, 16)
 
-	var message_label := add_label("DashboardMessageLabel", "", 14)
+	if not active_story["suggested_path_keys"].is_empty():
+		add_label("SuggestedPathsTitleLabel", tr_text("dashboard.suggested_paths"), 20)
+		for path_key in active_story["suggested_path_keys"]:
+			if not has_path_key(path_key):
+				add_button(
+					"SuggestedPathButton_%s" % path_key.replace(".", "_"),
+					tr_text(path_key),
+					add_suggested_path_and_show_dashboard.bind(path_key)
+				)
+
+	add_button("AddPathButton", tr_text("dashboard.add_path"), show_add_path_form)
+	add_button("BackToHomeButton", tr_text("common.back_to_home"), show_empty_home_without_story)
+
+
+func show_add_path_form() -> void:
+	clear_screen()
+	apply_language_direction()
+
+	add_label("AddPathTitleLabel", tr_text("dashboard.add_path"), 28)
+
+	var path_name_input := LineEdit.new()
+	path_name_input.name = "PathNameInput"
+	path_name_input.placeholder_text = tr_text("path.name_placeholder")
+	path_name_input.custom_minimum_size = Vector2(360, 44)
+	content_box.add_child(path_name_input)
+
+	var path_icon_input := LineEdit.new()
+	path_icon_input.name = "PathIconInput"
+	path_icon_input.placeholder_text = tr_text("path.icon_placeholder")
+	path_icon_input.custom_minimum_size = Vector2(360, 44)
+	content_box.add_child(path_icon_input)
+
+	var message_label := add_label("PathFormMessageLabel", "", 14)
+
 	add_button(
-		"AddPathButton",
-		tr_text("add_path"),
+		"CreatePathButton",
+		tr_text("path.create"),
 		func() -> void:
-			message_label.text = tr_text("path_placeholder")
+			var path_name := path_name_input.text.strip_edges()
+			if path_name.is_empty():
+				message_label.text = tr_text("error.empty_path_name")
+				return
+
+			if not add_custom_path(path_name, path_icon_input.text):
+				message_label.text = tr_text("error.duplicate_path")
+				return
+
+			show_story_dashboard()
 	)
-	add_button("BackToHomeButton", tr_text("back_to_home"), show_empty_home_without_story)
+
+	if not active_story["suggested_path_keys"].is_empty():
+		add_label("SuggestedPathFormTitleLabel", tr_text("path.add_from_suggestions"), 18)
+		for path_key in active_story["suggested_path_keys"]:
+			if not has_path_key(path_key):
+				add_button(
+					"SuggestedPathFormButton_%s" % path_key.replace(".", "_"),
+					tr_text(path_key),
+					add_suggested_path_from_form.bind(path_key, message_label)
+				)
+
+	add_button("CancelButton", tr_text("common.cancel"), show_story_dashboard)
 
 
 func show_empty_home_without_story() -> void:
@@ -238,20 +368,21 @@ func show_settings() -> void:
 	clear_screen()
 	apply_language_direction()
 
-	add_label("SettingsTitleLabel", tr_text("settings"), 28)
-	add_label("LanguageLabel", tr_text("language"), 18)
+	add_label("SettingsTitleLabel", tr_text("settings.title"), 28)
+	add_label("LanguageLabel", tr_text("settings.language"), 18)
 
 	var language_selector := OptionButton.new()
 	language_selector.name = "LanguageSelector"
-	language_selector.custom_minimum_size = Vector2(320, 44)
-	language_selector.add_item(tr_text("english"))
-	language_selector.add_item(tr_text("persian"))
-	language_selector.selected = 1 if current_language == LANGUAGE_PERSIAN else 0
+	language_selector.custom_minimum_size = Vector2(340, 44)
+	language_selector.add_item(tr_text("settings.english"))
+	language_selector.add_item(tr_text("settings.persian"))
+	language_selector.selected = 1 if localization.get_language() == Localization.PERSIAN else 0
 	language_selector.item_selected.connect(
 		func(index: int) -> void:
-			current_language = LANGUAGE_PERSIAN if index == 1 else LANGUAGE_ENGLISH
+			var next_language := Localization.PERSIAN if index == 1 else Localization.ENGLISH
+			localization.set_language(next_language)
 			show_settings()
 	)
 	content_box.add_child(language_selector)
 
-	add_button("BackToHomeButton", tr_text("back_to_home"), show_home)
+	add_button("BackToHomeButton", tr_text("common.back_to_home"), show_home)
