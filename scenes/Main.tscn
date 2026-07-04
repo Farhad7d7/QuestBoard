@@ -69,27 +69,38 @@ theme_override_font_sizes/font_size = 28
 text = "Create Custom Story"
 horizontal_alignment = 1
 
-[node name="StoryTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen" unique_id=450182988]
+[node name="CustomStoryColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/CustomStoryScreen"]
+layout_mode = 2
+
+[node name="StoryFieldsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StoryTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryFieldsColumn" unique_id=450182988]
 custom_minimum_size = Vector2(360, 44)
 layout_mode = 2
 placeholder_text = "Story title"
 
-[node name="StoryDescriptionInput" type="TextEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen" unique_id=700507115]
+[node name="StoryDescriptionInput" type="TextEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryFieldsColumn" unique_id=700507115]
 custom_minimum_size = Vector2(360, 110)
 layout_mode = 2
 placeholder_text = "Story description"
 
-[node name="FormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/CustomStoryScreen" unique_id=1284219952]
+[node name="StoryActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn" unique_id=1284219952]
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="CreateStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen" unique_id=830514228]
+[node name="CreateStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn" unique_id=830514228]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Create"
 
-[node name="CancelCustomStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen" unique_id=1079997054]
+[node name="CancelCustomStoryButton" type="Button" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn" unique_id=1079997054]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Cancel"
@@ -106,17 +117,24 @@ theme_override_font_sizes/font_size = 28
 text = "Choose a Story Template"
 horizontal_alignment = 1
 
-[node name="TemplateScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/TemplateScreen" unique_id=119109671]
+[node name="TemplateColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen"]
+layout_mode = 2
+
+[node name="TemplateScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateColumns" unique_id=119109671]
 custom_minimum_size = Vector2(420, 220)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="TemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateScrollContainer" unique_id=1277373179]
+[node name="TemplateButtonsContainer" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateColumns/TemplateScrollContainer" unique_id=1277373179]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="CancelTemplateButton" type="Button" parent="ScreenContainer/ContentBox/TemplateScreen" unique_id=1917238332]
+[node name="TemplateActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CancelTemplateButton" type="Button" parent="ScreenContainer/ContentBox/TemplateScreen/TemplateColumns/TemplateActionsColumn" unique_id=1917238332]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Cancel"
@@ -138,70 +156,81 @@ layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="CurrentPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=473422387]
+[node name="DashboardColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+
+[node name="DashboardPathsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CurrentPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn" unique_id=473422387]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Current paths"
 horizontal_alignment = 1
 
-[node name="CurrentPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1018725660]
+[node name="CurrentPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn" unique_id=1018725660]
 custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="CurrentPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer" unique_id=677242149]
+[node name="CurrentPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsScrollContainer" unique_id=677242149]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="NoPathsLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList" unique_id=1782315335]
+[node name="NoPathsLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsScrollContainer/CurrentPathsList" unique_id=1782315335]
 layout_mode = 2
 text = "No paths yet. Add your first path to shape this story."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="SuggestedPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1869718801]
+[node name="SuggestedPathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn" unique_id=1869718801]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Suggested paths"
 horizontal_alignment = 1
 
-[node name="SuggestedPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1490353178]
+[node name="SuggestedPathsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn" unique_id=1490353178]
 custom_minimum_size = Vector2(420, 120)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="SuggestedPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer" unique_id=736202526]
+[node name="SuggestedPathsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/SuggestedPathsScrollContainer" unique_id=736202526]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="SprintsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1649486228]
+[node name="DashboardSprintsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SprintsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=1649486228]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Sprints"
 horizontal_alignment = 1
 
-[node name="SprintsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=718204921]
+[node name="SprintsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=718204921]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="AddSprintHintLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1810212232]
+[node name="AddSprintHintLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=1810212232]
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="AddPathButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=601893339]
+[node name="AddPathButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=601893339]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Add Path"
 
-[node name="AddSprintButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=1430619700]
+[node name="AddSprintButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=1430619700]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Add Sprint"
 
-[node name="BackToHomeButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen" unique_id=263879282]
+[node name="BackToHomeButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=263879282]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Back to Home"
@@ -218,7 +247,7 @@ theme_override_font_sizes/font_size = 28
 text = "Add Path"
 horizontal_alignment = 1
 
-[node name="PathContentColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen"]
+[node name="PathContentColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=1021902687]
 layout_mode = 2
 
 [node name="PathFormSuggestedScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns" unique_id=323849736]
@@ -231,7 +260,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="CustomPathFormColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns"]
+[node name="CustomPathFormColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns" unique_id=1486857630]
 layout_mode = 2
 
 [node name="PathNameInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn" unique_id=1462095252]
@@ -353,16 +382,27 @@ theme_override_font_sizes/font_size = 28
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="LanguageLabel" type="Label" parent="ScreenContainer/ContentBox/SettingsScreen" unique_id=2036006880]
+[node name="SettingsColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/SettingsScreen"]
+layout_mode = 2
+
+[node name="SettingsLanguageColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/SettingsScreen/SettingsColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LanguageLabel" type="Label" parent="ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsLanguageColumn" unique_id=2036006880]
 layout_mode = 2
 text = "App language"
 horizontal_alignment = 1
 
-[node name="LanguageSelector" type="OptionButton" parent="ScreenContainer/ContentBox/SettingsScreen" unique_id=864069177]
+[node name="LanguageSelector" type="OptionButton" parent="ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsLanguageColumn" unique_id=864069177]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 
-[node name="BackFromSettingsButton" type="Button" parent="ScreenContainer/ContentBox/SettingsScreen" unique_id=434216864]
+[node name="SettingsActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/SettingsScreen/SettingsColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BackFromSettingsButton" type="Button" parent="ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsActionsColumn" unique_id=434216864]
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Back to Home"

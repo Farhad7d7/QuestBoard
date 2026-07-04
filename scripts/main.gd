@@ -120,33 +120,33 @@ var sprint_templates := [
 
 @onready var custom_story_screen: VBoxContainer = $ScreenContainer/ContentBox/CustomStoryScreen
 @onready var form_title_label: Label = $ScreenContainer/ContentBox/CustomStoryScreen/FormTitleLabel
-@onready var story_title_input: LineEdit = $ScreenContainer/ContentBox/CustomStoryScreen/StoryTitleInput
-@onready var story_description_input: TextEdit = $ScreenContainer/ContentBox/CustomStoryScreen/StoryDescriptionInput
-@onready var form_message_label: Label = $ScreenContainer/ContentBox/CustomStoryScreen/FormMessageLabel
-@onready var create_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CreateStoryButton
-@onready var cancel_custom_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CancelCustomStoryButton
+@onready var story_title_input: LineEdit = $ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryFieldsColumn/StoryTitleInput
+@onready var story_description_input: TextEdit = $ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryFieldsColumn/StoryDescriptionInput
+@onready var form_message_label: Label = $ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn/FormMessageLabel
+@onready var create_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn/CreateStoryButton
+@onready var cancel_custom_story_button: Button = $ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryActionsColumn/CancelCustomStoryButton
 
 @onready var template_screen: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen
 @onready var template_title_label: Label = $ScreenContainer/ContentBox/TemplateScreen/TemplateTitleLabel
-@onready var template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen/TemplateScrollContainer/TemplateButtonsContainer
-@onready var cancel_template_button: Button = $ScreenContainer/ContentBox/TemplateScreen/CancelTemplateButton
+@onready var template_buttons_container: VBoxContainer = $ScreenContainer/ContentBox/TemplateScreen/TemplateColumns/TemplateScrollContainer/TemplateButtonsContainer
+@onready var cancel_template_button: Button = $ScreenContainer/ContentBox/TemplateScreen/TemplateColumns/TemplateActionsColumn/CancelTemplateButton
 
 @onready var dashboard_screen: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen
 @onready var story_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryTitleLabel
 @onready var story_description_label: Label = $ScreenContainer/ContentBox/DashboardScreen/StoryDescriptionLabel
-@onready var current_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsTitleLabel
-@onready var current_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer
-@onready var current_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList
-@onready var no_paths_label: Label = $ScreenContainer/ContentBox/DashboardScreen/CurrentPathsScrollContainer/CurrentPathsList/NoPathsLabel
-@onready var suggested_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsTitleLabel
-@onready var suggested_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer
-@onready var suggested_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SuggestedPathsScrollContainer/SuggestedPathsList
-@onready var sprints_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/SprintsTitleLabel
-@onready var sprints_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/SprintsList
-@onready var add_sprint_hint_label: Label = $ScreenContainer/ContentBox/DashboardScreen/AddSprintHintLabel
-@onready var add_path_button: Button = $ScreenContainer/ContentBox/DashboardScreen/AddPathButton
-@onready var add_sprint_button: Button = $ScreenContainer/ContentBox/DashboardScreen/AddSprintButton
-@onready var back_to_home_button: Button = $ScreenContainer/ContentBox/DashboardScreen/BackToHomeButton
+@onready var current_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsTitleLabel
+@onready var current_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsScrollContainer
+@onready var current_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsScrollContainer/CurrentPathsList
+@onready var no_paths_label: Label = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/CurrentPathsScrollContainer/CurrentPathsList/NoPathsLabel
+@onready var suggested_paths_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/SuggestedPathsTitleLabel
+@onready var suggested_paths_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/SuggestedPathsScrollContainer
+@onready var suggested_paths_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardPathsColumn/SuggestedPathsScrollContainer/SuggestedPathsList
+@onready var sprints_title_label: Label = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/SprintsTitleLabel
+@onready var sprints_list: VBoxContainer = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/SprintsList
+@onready var add_sprint_hint_label: Label = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/AddSprintHintLabel
+@onready var add_path_button: Button = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/AddPathButton
+@onready var add_sprint_button: Button = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/AddSprintButton
+@onready var back_to_home_button: Button = $ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/BackToHomeButton
 
 @onready var add_path_screen: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen
 @onready var add_path_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/AddPathTitleLabel
@@ -174,9 +174,9 @@ var sprint_templates := [
 
 @onready var settings_screen: VBoxContainer = $ScreenContainer/ContentBox/SettingsScreen
 @onready var settings_title_label: Label = $ScreenContainer/ContentBox/SettingsScreen/SettingsTitleLabel
-@onready var language_label: Label = $ScreenContainer/ContentBox/SettingsScreen/LanguageLabel
-@onready var language_selector: OptionButton = $ScreenContainer/ContentBox/SettingsScreen/LanguageSelector
-@onready var back_from_settings_button: Button = $ScreenContainer/ContentBox/SettingsScreen/BackFromSettingsButton
+@onready var language_label: Label = $ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsLanguageColumn/LanguageLabel
+@onready var language_selector: OptionButton = $ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsLanguageColumn/LanguageSelector
+@onready var back_from_settings_button: Button = $ScreenContainer/ContentBox/SettingsScreen/SettingsColumns/SettingsActionsColumn/BackFromSettingsButton
 
 
 func _ready() -> void:
