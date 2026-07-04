@@ -1,6 +1,7 @@
 extends Control
 
 const Localization = preload("res://scripts/localization/localization.gd")
+const SAVE_PATH := "user://questboard_data.json"
 
 var localization := Localization.new()
 var active_story := {}
@@ -165,6 +166,7 @@ var sprint_templates := [
 
 func _ready() -> void:
 	connect_buttons()
+	load_state()
 	update_language_text()
 	show_home()
 
@@ -192,6 +194,63 @@ func connect_buttons() -> void:
 	back_from_quest_detail_button.pressed.connect(show_story_dashboard)
 	back_from_settings_button.pressed.connect(show_home)
 	language_selector.item_selected.connect(change_language)
+
+
+# Saves one readable JSON file in Godot's per-user app data folder.
+func save_state() -> void:
+	var save_data := {
+		"language": localization.get_language(),
+		"active_story": active_story,
+		"next_path_id": next_path_id,
+		"next_sprint_id": next_sprint_id,
+		"next_quest_id": next_quest_id,
+		"next_objective_id": next_objective_id,
+		"current_sprint_index": current_sprint_index
+	}
+
+	var save_file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if save_file == null:
+		return
+
+	save_file.store_string(JSON.stringify(save_data, "\t"))
+
+
+func load_state() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+
+	var save_file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if save_file == null:
+		return
+
+	var parsed = JSON.parse_string(save_file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+
+	localization.set_language(parsed.get("language", Localization.ENGLISH))
+	active_story = parsed.get("active_story", {})
+	next_path_id = int(parsed.get("next_path_id", 1))
+	next_sprint_id = int(parsed.get("next_sprint_id", 1))
+	next_quest_id = int(parsed.get("next_quest_id", 1))
+	next_objective_id = int(parsed.get("next_objective_id", 1))
+	current_sprint_index = int(parsed.get("current_sprint_index", -1))
+	refresh_next_ids_from_loaded_story()
+
+
+func refresh_next_ids_from_loaded_story() -> void:
+	for path_data in active_story.get("paths", []):
+		next_path_id = max(next_path_id, int(path_data.get("id", 0)) + 1)
+
+	for sprint in active_story.get("sprints", []):
+		next_sprint_id = max(next_sprint_id, int(sprint.get("id", 0)) + 1)
+		for quest in sprint.get("quests", []):
+			next_quest_id = max(next_quest_id, int(quest.get("id", 0)) + 1)
+			for objective in quest.get("objectives", []):
+				next_objective_id = max(next_objective_id, int(objective.get("id", 0)) + 1)
+
+	var sprints: Array = active_story.get("sprints", [])
+	if current_sprint_index >= sprints.size():
+		current_sprint_index = sprints.size() - 1
 
 
 func tr_text(key: String) -> String:
@@ -398,7 +457,10 @@ func has_path_key(path_key: String) -> bool:
 
 func show_home() -> void:
 	update_language_text()
-	show_screen(home_screen)
+	if active_story.is_empty():
+		show_screen(home_screen)
+	else:
+		show_story_dashboard()
 
 
 func show_custom_story_form() -> void:
@@ -424,6 +486,7 @@ func create_custom_story() -> void:
 		"sprints": []
 	}
 	current_sprint_index = -1
+	save_state()
 	show_story_dashboard()
 
 
@@ -453,6 +516,7 @@ func create_story_from_template(template_data: Dictionary) -> void:
 		"sprints": []
 	}
 	current_sprint_index = -1
+	save_state()
 	show_story_dashboard()
 
 
@@ -506,6 +570,19 @@ func update_sprints_list() -> void:
 	var sprints: Array = active_story.get("sprints", [])
 	sprints_title_label.visible = not sprints.is_empty()
 	sprints_list.visible = not sprints.is_empty()
+	add_quest_button.visible = false
+
+	if active_story.get("paths", []).is_empty():
+		add_sprint_hint_label.text = tr_text("dashboard.add_path_before_sprint")
+		add_sprint_hint_label.visible = true
+		return
+
+	if sprints.is_empty():
+		add_sprint_hint_label.text = tr_text("dashboard.create_first_sprint")
+		add_sprint_hint_label.visible = true
+		return
+
+	add_sprint_hint_label.visible = false
 	if current_sprint_index == -1 and not sprints.is_empty():
 		current_sprint_index = sprints.size() - 1
 
@@ -522,14 +599,54 @@ func update_sprints_list() -> void:
 
 
 func add_current_sprint_quests(sprint: Dictionary) -> void:
+	sprints_list.add_child(make_list_label("%s: %s" % [tr_text("dashboard.active_sprint"), sprint.get("title", "")]))
+	sprints_list.add_child(make_list_label("%s: %s" % [tr_text("dashboard.active_paths"), get_active_path_names(sprint)]))
 	sprints_list.add_child(make_list_label(tr_text("quest.quests")))
 	var quests: Array = sprint.get("quests", [])
 	if quests.is_empty():
-		sprints_list.add_child(make_list_label(tr_text("quest.no_quests")))
+		sprints_list.add_child(make_list_label(tr_text("dashboard.add_first_quest")))
 	for quest_index in range(quests.size()):
 		var quest: Dictionary = quests[quest_index]
 		var button_text := "%s - %d%%" % [quest.get("title", ""), int(calculate_quest_progress(quest))]
 		sprints_list.add_child(make_list_button(button_text, show_quest_detail.bind(quest_index)))
+		add_quest_objective_summary(quest)
+
+	var counts := count_objectives_for_sprint(sprint)
+	sprints_list.add_child(make_list_label("%s: %d/%d" % [tr_text("dashboard.completed_objectives"), counts["completed"], counts["total"]]))
+	if counts["total"] == 0 and not quests.is_empty():
+		sprints_list.add_child(make_list_label(tr_text("dashboard.add_objectives")))
+
+
+func add_quest_objective_summary(quest: Dictionary) -> void:
+	var objectives: Array = quest.get("objectives", [])
+	for objective in objectives:
+		var objective_title := str(objective.get("title", ""))
+		if objective.get("completed", false):
+			sprints_list.add_child(make_list_label("  %s: %s" % [tr_text("objective.completed_marker"), objective_title]))
+		else:
+			sprints_list.add_child(make_list_label("  %s: %s" % [tr_text("dashboard.active_objectives"), objective_title]))
+
+
+func get_active_path_names(sprint: Dictionary) -> String:
+	var path_names := []
+	for path_id in sprint.get("active_path_ids", []):
+		var path_data := get_path_by_id(int(path_id))
+		if not path_data.is_empty():
+			path_names.append(localized_path_name(path_data))
+	if path_names.is_empty():
+		return tr_text("error.select_active_path")
+	return ", ".join(path_names)
+
+
+func count_objectives_for_sprint(sprint: Dictionary) -> Dictionary:
+	var total := 0
+	var completed := 0
+	for quest in sprint.get("quests", []):
+		for objective in quest.get("objectives", []):
+			total += 1
+			if objective.get("completed", false):
+				completed += 1
+	return {"completed": completed, "total": total}
 
 
 func show_add_path_form() -> void:
@@ -568,6 +685,7 @@ func add_custom_path(path_name: String, icon_text: String) -> bool:
 		return false
 	active_story["paths"].append({"id": next_path_id, "name": clean_name, "icon": icon_text.strip_edges()})
 	next_path_id += 1
+	save_state()
 	return true
 
 
@@ -576,6 +694,7 @@ func add_suggested_path(path_key: String) -> bool:
 		return false
 	active_story["paths"].append({"id": next_path_id, "name_key": path_key, "icon": ""})
 	next_path_id += 1
+	save_state()
 	return true
 
 
@@ -646,6 +765,7 @@ func add_sprint(sprint_data: Dictionary) -> void:
 	sprint_data["quests"] = []
 	active_story["sprints"].append(sprint_data)
 	current_sprint_index = active_story["sprints"].size() - 1
+	save_state()
 	show_select_active_paths(current_sprint_index)
 
 
@@ -678,6 +798,7 @@ func save_active_paths_for_sprint() -> void:
 	active_story["sprints"][pending_sprint_index]["active_path_ids"] = selected_path_ids
 	current_sprint_index = pending_sprint_index
 	pending_sprint_index = -1
+	save_state()
 	show_story_dashboard()
 
 
@@ -723,6 +844,7 @@ func create_quest() -> void:
 		"objectives": []
 	})
 	next_quest_id += 1
+	save_state()
 	show_story_dashboard()
 
 
@@ -779,6 +901,8 @@ func save_objective() -> void:
 		next_objective_id += 1
 	objective_title_input.text = ""
 	objective_message_label.text = ""
+	add_objective_button.text = tr_text("objective.add")
+	save_state()
 	update_quest_detail()
 
 
@@ -795,12 +919,14 @@ func delete_objective(objective_index: int) -> void:
 	editing_objective_index = -1
 	objective_title_input.text = ""
 	add_objective_button.text = tr_text("objective.add")
+	save_state()
 	update_quest_detail()
 
 
 func toggle_objective(pressed: bool, objective_index: int) -> void:
 	var quest: Dictionary = active_story["sprints"][current_sprint_index]["quests"][current_quest_index]
 	quest["objectives"][objective_index]["completed"] = pressed
+	save_state()
 	update_quest_detail()
 
 
@@ -878,6 +1004,7 @@ func show_settings() -> void:
 func change_language(index: int) -> void:
 	var next_language := Localization.PERSIAN if index == 1 else Localization.ENGLISH
 	localization.set_language(next_language)
+	save_state()
 	update_language_text()
 	if dashboard_screen.visible:
 		update_dashboard()
@@ -895,6 +1022,4 @@ func change_language(index: int) -> void:
 
 
 func show_empty_home_without_story() -> void:
-	active_story = {}
-	current_sprint_index = -1
 	show_home()
