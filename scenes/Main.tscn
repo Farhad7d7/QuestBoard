@@ -218,41 +218,47 @@ theme_override_font_sizes/font_size = 28
 text = "Add Path"
 horizontal_alignment = 1
 
-[node name="PathNameInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=1462095252]
+[node name="PathContentColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen"]
+layout_mode = 2
+
+[node name="PathFormSuggestedScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns" unique_id=323849736]
+custom_minimum_size = Vector2(420, 130)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="PathFormSuggestedList" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/PathFormSuggestedScrollContainer" unique_id=1980416460]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="CustomPathFormColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns"]
+layout_mode = 2
+
+[node name="PathNameInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn" unique_id=1462095252]
 custom_minimum_size = Vector2(360, 44)
 layout_mode = 2
 placeholder_text = "Path name"
 
-[node name="PathIconInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=1706718606]
+[node name="PathIconInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn" unique_id=1706718606]
 custom_minimum_size = Vector2(360, 44)
 layout_mode = 2
 placeholder_text = "Icon text, optional"
 
-[node name="PathFormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=477073351]
+[node name="PathFormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn" unique_id=477073351]
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="CreatePathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=1282305446]
-custom_minimum_size = Vector2(340, 44)
-layout_mode = 2
-text = "Create Path"
-
-[node name="SuggestedPathFormTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=695386803]
+[node name="SuggestedPathFormTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn" unique_id=695386803]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Add from suggested paths"
 horizontal_alignment = 1
 
-[node name="PathFormSuggestedScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=323849736]
-custom_minimum_size = Vector2(420, 130)
+[node name="CreatePathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=1282305446]
+custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="PathFormSuggestedList" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer" unique_id=1980416460]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
+text = "Create Path"
 
 [node name="CancelPathButton" type="Button" parent="ScreenContainer/ContentBox/AddPathScreen" unique_id=722129446]
 custom_minimum_size = Vector2(340, 44)

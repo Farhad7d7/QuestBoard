@@ -150,13 +150,13 @@ var sprint_templates := [
 
 @onready var add_path_screen: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen
 @onready var add_path_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/AddPathTitleLabel
-@onready var path_name_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathNameInput
-@onready var path_icon_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathIconInput
-@onready var path_form_message_label: Label = $ScreenContainer/ContentBox/AddPathScreen/PathFormMessageLabel
+@onready var path_name_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn/PathNameInput
+@onready var path_icon_input: LineEdit = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn/PathIconInput
+@onready var path_form_message_label: Label = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn/PathFormMessageLabel
 @onready var create_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CreatePathButton
-@onready var suggested_path_form_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/SuggestedPathFormTitleLabel
-@onready var path_form_suggested_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer
-@onready var path_form_suggested_list: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen/PathFormSuggestedScrollContainer/PathFormSuggestedList
+@onready var suggested_path_form_title_label: Label = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/CustomPathFormColumn/SuggestedPathFormTitleLabel
+@onready var path_form_suggested_scroll_container: ScrollContainer = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/PathFormSuggestedScrollContainer
+@onready var path_form_suggested_list: VBoxContainer = $ScreenContainer/ContentBox/AddPathScreen/PathContentColumns/PathFormSuggestedScrollContainer/PathFormSuggestedList
 @onready var cancel_path_button: Button = $ScreenContainer/ContentBox/AddPathScreen/CancelPathButton
 
 @onready var add_sprint_screen: VBoxContainer = $ScreenContainer/ContentBox/AddSprintScreen
