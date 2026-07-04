@@ -86,6 +86,11 @@ custom_minimum_size = Vector2(360, 110)
 layout_mode = 2
 placeholder_text = "Story description"
 
+[node name="StoryGoalInput" type="TextEdit" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns/StoryFieldsColumn"]
+custom_minimum_size = Vector2(360, 90)
+layout_mode = 2
+placeholder_text = "Story goal"
+
 [node name="StoryActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/CustomStoryScreen/CustomStoryColumns"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -156,6 +161,20 @@ layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="StoryGoalLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StoryProgressLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="StoryProgressBar" type="ProgressBar" parent="ScreenContainer/ContentBox/DashboardScreen"]
+custom_minimum_size = Vector2(420, 18)
+layout_mode = 2
+show_percentage = true
+
 [node name="DashboardColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen"]
 layout_mode = 2
 
@@ -211,8 +230,14 @@ theme_override_font_sizes/font_size = 20
 text = "Sprints"
 horizontal_alignment = 1
 
-[node name="SprintsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=718204921]
+[node name="SprintsScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn"]
+custom_minimum_size = Vector2(420, 170)
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="SprintsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn/SprintsScrollContainer" unique_id=718204921]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="AddSprintHintLabel" type="Label" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=1810212232]
@@ -229,6 +254,11 @@ text = "Add Path"
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Add Sprint"
+
+[node name="AddQuestButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Add Quest"
 
 [node name="BackToHomeButton" type="Button" parent="ScreenContainer/ContentBox/DashboardScreen/DashboardColumns/DashboardSprintsColumn" unique_id=263879282]
 custom_minimum_size = Vector2(340, 44)
@@ -369,6 +399,175 @@ text = "Create Sprint"
 custom_minimum_size = Vector2(340, 44)
 layout_mode = 2
 text = "Cancel"
+
+[node name="SelectActivePathsScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SelectActivePathsTitleLabel" type="Label" parent="ScreenContainer/ContentBox/SelectActivePathsScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Select Active Paths"
+horizontal_alignment = 1
+
+[node name="SelectActivePathsHintLabel" type="Label" parent="ScreenContainer/ContentBox/SelectActivePathsScreen"]
+layout_mode = 2
+text = "Choose which paths belong to this sprint."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SelectActivePathsColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/SelectActivePathsScreen"]
+layout_mode = 2
+
+[node name="ActivePathScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns"]
+custom_minimum_size = Vector2(420, 220)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ActivePathOptionsList" type="VBoxContainer" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns/ActivePathScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="SelectActivePathsActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SelectActivePathsMessageLabel" type="Label" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns/SelectActivePathsActionsColumn"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SaveActivePathsButton" type="Button" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns/SelectActivePathsActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Save Active Paths"
+
+[node name="CancelActivePathsButton" type="Button" parent="ScreenContainer/ContentBox/SelectActivePathsScreen/SelectActivePathsColumns/SelectActivePathsActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="AddQuestScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="AddQuestTitleLabel" type="Label" parent="ScreenContainer/ContentBox/AddQuestScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Add Quest"
+horizontal_alignment = 1
+
+[node name="QuestColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/AddQuestScreen"]
+layout_mode = 2
+
+[node name="QuestFieldsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="QuestTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestFieldsColumn"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Quest title"
+
+[node name="QuestDescriptionInput" type="TextEdit" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestFieldsColumn"]
+custom_minimum_size = Vector2(360, 90)
+layout_mode = 2
+placeholder_text = "Quest description"
+
+[node name="QuestPathSelector" type="OptionButton" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestFieldsColumn"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+
+[node name="QuestDueDateInput" type="LineEdit" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestFieldsColumn"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+placeholder_text = "Due date"
+
+[node name="QuestStatusSelector" type="OptionButton" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestFieldsColumn"]
+custom_minimum_size = Vector2(360, 44)
+layout_mode = 2
+
+[node name="QuestActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="QuestFormMessageLabel" type="Label" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestActionsColumn"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CreateQuestButton" type="Button" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Create Quest"
+
+[node name="CancelQuestButton" type="Button" parent="ScreenContainer/ContentBox/AddQuestScreen/QuestColumns/QuestActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Cancel"
+
+[node name="QuestDetailScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="QuestDetailTitleLabel" type="Label" parent="ScreenContainer/ContentBox/QuestDetailScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="QuestDetailProgressLabel" type="Label" parent="ScreenContainer/ContentBox/QuestDetailScreen"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="QuestDetailProgressBar" type="ProgressBar" parent="ScreenContainer/ContentBox/QuestDetailScreen"]
+custom_minimum_size = Vector2(420, 18)
+layout_mode = 2
+show_percentage = true
+
+[node name="QuestDetailColumns" type="HBoxContainer" parent="ScreenContainer/ContentBox/QuestDetailScreen"]
+layout_mode = 2
+
+[node name="ObjectivesScrollContainer" type="ScrollContainer" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns"]
+custom_minimum_size = Vector2(520, 260)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ObjectivesList" type="VBoxContainer" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns/ObjectivesScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="ObjectiveActionsColumn" type="VBoxContainer" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ObjectiveTitleInput" type="LineEdit" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns/ObjectiveActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+placeholder_text = "Objective title"
+
+[node name="ObjectiveMessageLabel" type="Label" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns/ObjectiveActionsColumn"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AddObjectiveButton" type="Button" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns/ObjectiveActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Add Objective"
+
+[node name="BackFromQuestDetailButton" type="Button" parent="ScreenContainer/ContentBox/QuestDetailScreen/QuestDetailColumns/ObjectiveActionsColumn"]
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+text = "Back"
 
 [node name="SettingsScreen" type="VBoxContainer" parent="ScreenContainer/ContentBox" unique_id=2139739473]
 visible = false
