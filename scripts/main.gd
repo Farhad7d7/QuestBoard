@@ -2,10 +2,12 @@ extends Control
 
 const Localization = preload("res://scripts/localization/localization.gd")
 const SAVE_PATH := "user://questboard_data.json"
+const SAVE_VERSION := 1
 
 var localization := Localization.new()
 var active_story := {}
 
+var next_story_id := 1
 var next_path_id := 1
 var next_sprint_id := 1
 var next_quest_id := 1
@@ -14,6 +16,9 @@ var current_sprint_index := -1
 var pending_sprint_index := -1
 var current_quest_index := -1
 var editing_objective_index := -1
+var active_story_id := -1
+var saved_screen_name := "home"
+var is_loading_state := false
 
 var story_templates := [
 	{
@@ -168,7 +173,7 @@ func _ready() -> void:
 	connect_buttons()
 	load_state()
 	update_language_text()
-	show_home()
+	restore_saved_screen()
 
 
 func connect_buttons() -> void:
@@ -199,13 +204,32 @@ func connect_buttons() -> void:
 # Saves one readable JSON file in Godot's per-user app data folder.
 func save_state() -> void:
 	var save_data := {
-		"language": localization.get_language(),
-		"active_story": active_story,
-		"next_path_id": next_path_id,
-		"next_sprint_id": next_sprint_id,
-		"next_quest_id": next_quest_id,
-		"next_objective_id": next_objective_id,
-		"current_sprint_index": current_sprint_index
+		"save_version": SAVE_VERSION,
+		"settings": {
+			"language": localization.get_language()
+		},
+		"ui_state": {
+			"last_screen": saved_screen_name,
+			"active_story_id": active_story_id,
+			"active_sprint_index": current_sprint_index,
+			"active_quest_index": current_quest_index,
+			"pending_sprint_index": pending_sprint_index
+		},
+		"ids": {
+			"next_story_id": next_story_id,
+			"next_path_id": next_path_id,
+			"next_sprint_id": next_sprint_id,
+			"next_quest_id": next_quest_id,
+			"next_objective_id": next_objective_id
+		},
+		"stories": get_saved_stories(),
+		"future": {
+			"calendar": {},
+			"ai": {},
+			"achievements": {},
+			"cloud_sync": {},
+			"themes": {}
+		}
 	}
 
 	var save_file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -219,25 +243,101 @@ func load_state() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
 
+	is_loading_state = true
 	var save_file := FileAccess.open(SAVE_PATH, FileAccess.READ)
 	if save_file == null:
+		is_loading_state = false
 		return
 
 	var parsed = JSON.parse_string(save_file.get_as_text())
 	if typeof(parsed) != TYPE_DICTIONARY:
+		is_loading_state = false
 		return
 
-	localization.set_language(parsed.get("language", Localization.ENGLISH))
-	active_story = parsed.get("active_story", {})
-	next_path_id = int(parsed.get("next_path_id", 1))
-	next_sprint_id = int(parsed.get("next_sprint_id", 1))
-	next_quest_id = int(parsed.get("next_quest_id", 1))
-	next_objective_id = int(parsed.get("next_objective_id", 1))
-	current_sprint_index = int(parsed.get("current_sprint_index", -1))
+	if parsed.has("save_version"):
+		load_versioned_state(parsed)
+	else:
+		load_legacy_state(parsed)
 	refresh_next_ids_from_loaded_story()
+	is_loading_state = false
+
+
+func load_versioned_state(save_data: Dictionary) -> void:
+	var settings: Dictionary = save_data.get("settings", {})
+	var ui_state: Dictionary = save_data.get("ui_state", {})
+	var ids: Dictionary = save_data.get("ids", {})
+	var stories: Array = save_data.get("stories", [])
+
+	localization.set_language(settings.get("language", Localization.ENGLISH))
+	next_story_id = int(ids.get("next_story_id", 1))
+	next_path_id = int(ids.get("next_path_id", 1))
+	next_sprint_id = int(ids.get("next_sprint_id", 1))
+	next_quest_id = int(ids.get("next_quest_id", 1))
+	next_objective_id = int(ids.get("next_objective_id", 1))
+	active_story_id = int(ui_state.get("active_story_id", -1))
+	current_sprint_index = int(ui_state.get("active_sprint_index", -1))
+	current_quest_index = int(ui_state.get("active_quest_index", -1))
+	pending_sprint_index = int(ui_state.get("pending_sprint_index", -1))
+	saved_screen_name = ui_state.get("last_screen", "home")
+
+	active_story = {}
+	for story in stories:
+		if int(story.get("id", -1)) == active_story_id:
+			active_story = story
+			break
+
+	if active_story.is_empty() and not stories.is_empty():
+		active_story = stories[0]
+		active_story_id = int(active_story.get("id", -1))
+
+
+func load_legacy_state(save_data: Dictionary) -> void:
+	localization.set_language(save_data.get("language", Localization.ENGLISH))
+	active_story = save_data.get("active_story", {})
+	next_path_id = int(save_data.get("next_path_id", 1))
+	next_sprint_id = int(save_data.get("next_sprint_id", 1))
+	next_quest_id = int(save_data.get("next_quest_id", 1))
+	next_objective_id = int(save_data.get("next_objective_id", 1))
+	current_sprint_index = int(save_data.get("current_sprint_index", -1))
+	current_quest_index = -1
+	pending_sprint_index = -1
+	saved_screen_name = "dashboard" if not active_story.is_empty() else "home"
+	ensure_active_story_has_id()
+
+
+func get_saved_stories() -> Array:
+	if active_story.is_empty():
+		return []
+	return [active_story]
+
+
+func ensure_active_story_has_id() -> void:
+	if active_story.is_empty():
+		active_story_id = -1
+		return
+	if not active_story.has("id"):
+		active_story["id"] = next_story_id
+		next_story_id += 1
+	if not active_story.has("title") and active_story.has("title_key"):
+		active_story["title"] = tr_text(active_story["title_key"])
+	if not active_story.has("description") and active_story.has("description_key"):
+		active_story["description"] = tr_text(active_story["description_key"])
+	if not active_story.has("goal") and active_story.has("goal_key"):
+		active_story["goal"] = tr_text(active_story["goal_key"])
+	if not active_story.has("template_id"):
+		active_story["template_id"] = ""
+	if not active_story.has("paths"):
+		active_story["paths"] = []
+	if not active_story.has("sprints"):
+		active_story["sprints"] = []
+	active_story_id = int(active_story["id"])
 
 
 func refresh_next_ids_from_loaded_story() -> void:
+	ensure_active_story_has_id()
+	if not active_story.is_empty():
+		next_story_id = max(next_story_id, int(active_story.get("id", 0)) + 1)
+
 	for path_data in active_story.get("paths", []):
 		next_path_id = max(next_path_id, int(path_data.get("id", 0)) + 1)
 
@@ -251,6 +351,12 @@ func refresh_next_ids_from_loaded_story() -> void:
 	var sprints: Array = active_story.get("sprints", [])
 	if current_sprint_index >= sprints.size():
 		current_sprint_index = sprints.size() - 1
+	if pending_sprint_index >= sprints.size():
+		pending_sprint_index = -1
+	var current_sprint := get_current_sprint()
+	var quests: Array = current_sprint.get("quests", [])
+	if current_quest_index >= quests.size():
+		current_quest_index = quests.size() - 1
 
 
 func tr_text(key: String) -> String:
@@ -260,7 +366,73 @@ func tr_text(key: String) -> String:
 func show_screen(screen_to_show: Control) -> void:
 	for screen in content_box.get_children():
 		screen.visible = screen == screen_to_show
+	saved_screen_name = get_screen_save_name(screen_to_show)
 	apply_language_direction()
+	if not is_loading_state:
+		save_state()
+
+
+func get_screen_save_name(screen: Control) -> String:
+	if screen == home_screen:
+		return "home"
+	if screen == custom_story_screen:
+		return "custom_story"
+	if screen == template_screen:
+		return "template"
+	if screen == dashboard_screen:
+		return "dashboard"
+	if screen == add_path_screen:
+		return "add_path"
+	if screen == add_sprint_screen:
+		return "add_sprint"
+	if screen == select_active_paths_screen:
+		return "select_active_paths"
+	if screen == add_quest_screen:
+		return "add_quest"
+	if screen == quest_detail_screen:
+		return "quest_detail"
+	if screen == settings_screen:
+		return "settings"
+	return "home"
+
+
+func restore_saved_screen() -> void:
+	if active_story.is_empty():
+		show_screen(home_screen)
+		return
+
+	match saved_screen_name:
+		"custom_story":
+			show_custom_story_form()
+		"template":
+			show_template_selection()
+		"add_path":
+			show_add_path_form()
+		"add_sprint":
+			if active_story.get("paths", []).is_empty():
+				show_story_dashboard()
+			else:
+				show_add_sprint_form()
+		"select_active_paths":
+			if pending_sprint_index >= 0:
+				show_select_active_paths(pending_sprint_index)
+			else:
+				show_story_dashboard()
+		"add_quest":
+			var sprint := get_current_sprint()
+			if sprint.is_empty() or sprint.get("active_path_ids", []).is_empty():
+				show_story_dashboard()
+			else:
+				show_add_quest_form()
+		"quest_detail":
+			if current_quest_index >= 0:
+				show_quest_detail(current_quest_index)
+			else:
+				show_story_dashboard()
+		"settings":
+			show_settings()
+		_:
+			show_story_dashboard()
 
 
 func apply_language_direction() -> void:
@@ -478,14 +650,19 @@ func create_custom_story() -> void:
 		return
 
 	active_story = {
+		"id": next_story_id,
 		"title": title,
 		"description": story_description_input.text.strip_edges(),
 		"goal": story_goal_input.text.strip_edges(),
+		"template_id": "",
 		"suggested_path_keys": [],
 		"paths": [],
 		"sprints": []
 	}
+	next_story_id += 1
+	active_story_id = int(active_story["id"])
 	current_sprint_index = -1
+	current_quest_index = -1
 	save_state()
 	show_story_dashboard()
 
@@ -507,7 +684,11 @@ func show_template_selection() -> void:
 
 func create_story_from_template(template_data: Dictionary) -> void:
 	active_story = {
+		"id": next_story_id,
 		"template_id": template_data["id"],
+		"title": tr_text(template_data["title_key"]),
+		"description": tr_text(template_data["description_key"]),
+		"goal": tr_text(template_data["goal_key"]),
 		"title_key": template_data["title_key"],
 		"description_key": template_data["description_key"],
 		"goal_key": template_data["goal_key"],
@@ -515,7 +696,10 @@ func create_story_from_template(template_data: Dictionary) -> void:
 		"paths": [],
 		"sprints": []
 	}
+	next_story_id += 1
+	active_story_id = int(active_story["id"])
 	current_sprint_index = -1
+	current_quest_index = -1
 	save_state()
 	show_story_dashboard()
 
